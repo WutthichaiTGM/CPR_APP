@@ -1,77 +1,105 @@
 import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-
-class AudioPlayerObj {
+class AudioPlayerObjeto {
   AudioPlayer _advancedPlayer;
-  AudioCache _audioCasche;
+  AudioCache _audioCache;
   String _localFilePath;
   double _sliderVal;
   Duration _duration;
   Duration _position;
-  String _tempoMusica = " ";
+  String _tempoMusica = "";
   bool _play = false;
   String _musicaAtual = "";
-  String _photo = "";
 
-  AudioPlayerObj(this._advancedPlayer,this._audioCasche,this._localFilePath,this._sliderVal
-  ,this._duration,this._position,this._tempoMusica,this._play,this._musicaAtual,this._photo);
-  
-  String get musicaAtual => _musicaAtual;
 
-  set musicaAtual(String value){
-    _musicaAtual=value;
+  AudioPlayerObjeto(this._advancedPlayer, this._audioCache, this._localFilePath,
+      this._duration, this._position, this._tempoMusica, this._play,
+      this._musicaAtual);
+
+
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is AudioPlayerObjeto &&
+              runtimeType == other.runtimeType &&
+              _advancedPlayer == other._advancedPlayer &&
+              _audioCache == other._audioCache &&
+              _localFilePath == other._localFilePath &&
+              _duration == other._duration &&
+              _position == other._position &&
+              _tempoMusica == other._tempoMusica &&
+              _play == other._play &&
+              _musicaAtual == other._musicaAtual;
+
+  @override
+  int get hashCode =>
+      _advancedPlayer.hashCode ^
+      _audioCache.hashCode ^
+      _localFilePath.hashCode ^
+      _duration.hashCode ^
+      _position.hashCode ^
+      _tempoMusica.hashCode ^
+      _play.hashCode ^
+      _musicaAtual.hashCode;
+
+  AudioPlayer get advancedPlayer => _advancedPlayer;
+
+  set advancedPlayer(AudioPlayer value) {
+    _advancedPlayer = value;
   }
 
-  String get photo => _photo;
 
-  set photo(String value){
-    _photo=value;
+  double get sliderVal => _sliderVal;
+
+  set sliderVal(double value) {
+    _sliderVal = value;
   }
-  
-  bool get play => _play;
 
-  set play(bool value){
-    _play = value;
+  AudioCache get audioCache => _audioCache;
+
+  set audioCache(AudioCache value){
+    _audioCache = value;
+  }
+
+  get localFilePath => _localFilePath;
+
+  set localFilePath(String value) {
+    _localFilePath = value;
+  }
+
+
+
+  Duration get duration => _duration;
+
+  set duration(Duration value) {
+    _duration = value;
+  }
+
+  Duration get position => _position;
+
+  set position(Duration value) {
+    _position = value;
   }
 
   String get tempoMusica => _tempoMusica;
 
-  set tempoMusica(String value){
+  set tempoMusica(String value) {
     _tempoMusica = value;
   }
 
-  Duration get position => _position;
-  set position(Duration value){
-    _position = value;
+  bool get play => _play;
+
+  set play(bool value) {
+    _play = value;
   }
 
-  Duration get duration => _duration;
-  set duration(Duration value){
-    _duration = value;
+  String get musicaAtual => _musicaAtual;
+
+  set musicaAtual(String value) {
+    _musicaAtual = value;
   }
 
-  double get SliderVal => _sliderVal;
-
-  set sliderVar(double value){
-    _sliderVal = value;
-  }
-
-  String get localFilePath => _localFilePath;
-
-  set localFilePath(String value){
-    _localFilePath = value;
-  }
-
-  AudioCache get audioCache => _audioCasche;
-  set audioCache(AudioCache value){
-    _audioCasche = value;
-  }
-
-  AudioPlayer get advancedPlayer => _advancedPlayer;
-
-  set advancedPlayer(AudioPlayer value){
-    _advancedPlayer = value;
-  }
 
 }

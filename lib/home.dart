@@ -32,7 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            ListView(children: <Widget>[
+            ListView(
+              // padding: const EdgeInsets.all(10),
+              children: <Widget>[
               Card(
                 child: new InkWell(
                   onTap: () {
@@ -80,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
+              
             ]),
           ],
         ));

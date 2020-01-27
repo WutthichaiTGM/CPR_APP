@@ -1,86 +1,96 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audio_cache.dart';
+import 'package:project_cpr/content/page/AudioPlayer.dart';
+
 import 'package:rxdart/rxdart.dart';
 
-import 'AudioPlayer.dart';
+
+
 
 class AudioPlayerController extends BlocBase{
 
-  BehaviorSubject<AudioPlayerObj> durB = new BehaviorSubject<AudioPlayerObj>();
+  BehaviorSubject<AudioPlayerObjeto> durB = new BehaviorSubject<AudioPlayerObjeto>();
 
-  Stream<AudioPlayerObj> get outPlayer => durB.stream;
-  Sink<AudioPlayerObj> get inPlayer => durB.sink;
+  Stream<AudioPlayerObjeto> get outDuration => durB.stream;
+  Sink<AudioPlayerObjeto> get inDuration => durB.sink;
 
   AudioPlayer advancedPlayer = new AudioPlayer();
-  
-  AudioPlayerObj audioObj;
+
+  AudioPlayerObjeto audioObjeto;
+
 
   AudioPlayerController(){
-    audioObj = new AudioPlayerObj(advancedPlayer,
-    new AudioCache(fixedPlayer: advancedPlayer),'',0,
-    new Duration(), new Duration(),
-    '',false,'','');
+    audioObjeto = new AudioPlayerObjeto(advancedPlayer,
+        new AudioCache(fixedPlayer: advancedPlayer), "",
+        new Duration(), new Duration(),
+        "", false, "");
 
-    audioObj.advancedPlayer.onDurationChanged.listen((Duration d){
-      audioObj.duration = d;
-      inPlayer.add(audioObj);
+
+    audioObjeto.advancedPlayer.onDurationChanged.listen((Duration d){
+      audioObjeto.duration = d;
+      inDuration.add(audioObjeto);
     });
 
-    audioObj.advancedPlayer.onAudioPositionChanged.listen((Duration p){
-      audioObj.position = p;
-      inPlayer.add(audioObj);
+    audioObjeto.advancedPlayer.onAudioPositionChanged.listen((Duration  p){
+      audioObjeto.position = p;
+
+      inDuration.add(audioObjeto);
+
+
     });
 
-    // audioObj.musicaAtual = "a.mp3";
-    audioObj.musicaAtual = "จังหวะ.mp3";
-    audioObj.musicaAtual = "เพลง.mp3";
-    // audioObj.photo = "music.jpg";
-
-
-    inPlayer.add(audioObj);
+    audioObjeto.musicaAtual = "a.mp3";
+    inDuration.add(audioObjeto);
   }
-
-  
 
   botaoPlayPause(){
-    if (audioObj.play) {
-      audioObj.play = false;
-      audioObj.advancedPlayer.pause();
+    if (audioObjeto.play) {
+      audioObjeto.play = false;
+      audioObjeto.advancedPlayer.pause();
     } else {
-      audioObj.play = true;
-      audioObj.audioCache.play(audioObj.musicaAtual);
+      audioObjeto.play = true;
+
+      audioObjeto.audioCache.play(audioObjeto.musicaAtual);
     }
-    inPlayer.add(audioObj);
+    inDuration.add(audioObjeto);
+
   }
-  trocarMusica(String musica) {
-    audioObj.musicaAtual = musica;
+  botaoSkipBack(){
+    audioObjeto.advancedPlayer.stop();
+    audioObjeto.advancedPlayer.play(audioController.audioObjeto.musicaAtual);
+    inDuration.add(audioObjeto);
+
+  }
+
+  trocarMusica(String musica){
+    audioObjeto.musicaAtual = musica;
     print(musica);
 
-    audioObj.audioCache.play(audioObj.musicaAtual);
-    audioObj.play = true;
-    inPlayer.add(audioObj);
+
+    audioObjeto.audioCache.play(audioObjeto.musicaAtual);
+    audioObjeto.play = true;
+    inDuration.add(audioObjeto);
   }
 
-  tempoMusica(double newValue){
+  tempoMusica(double newValue) {
+
     Duration newDuration = Duration(seconds: newValue.toInt());
 
-    audioObj.advancedPlayer.seek(newDuration);
+    audioObjeto.advancedPlayer.seek(newDuration);
 
-    audioObj.tempoMusica = newValue.toStringAsFixed(0);
-    audioObj.advancedPlayer.resume();
-    audioObj.play = true;
-    inPlayer.add(audioObj);
+
+    audioObjeto.tempoMusica = newValue.toStringAsFixed(0);
+    audioObjeto.advancedPlayer.resume();
+    audioObjeto.play = true;
+    inDuration.add(audioObjeto);
     print(newValue.toInt());
   }
 
-
-
   @override
   void dispose() {
-    // TODO: implement dispose
   }
 
 }
 
-AudioPlayerController audioC = new AudioPlayerController();
+AudioPlayerController audioController = new AudioPlayerController();

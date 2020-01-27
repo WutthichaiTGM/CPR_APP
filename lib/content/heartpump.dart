@@ -1,46 +1,32 @@
-//import 'package:flutter/material.dart';
-//final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-//final SnackBar snackBar = const SnackBar(content: Text('Showing Snackbar'));
-//
-//void heartpump(BuildContext context) {
-//  Navigator.push(context, MaterialPageRoute(
-//    builder: (BuildContext context) {
-//      return Scaffold(
-//        appBar: AppBar(
-//          title: const Text('จังหวะการปั้มหัวใจ'),
-//        ),
-//        body: Image.asset('assets/images/icon_one.png',fit:BoxFit.contain,),
-//      );
-//    },
-//  ));
-//}
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-//import 'package:music/supplements/photohero.dart';
-import 'page/AudioPlayer.dart';
-import 'page/AudioPlayerController.dart';
+// import 'package:flutter/scheduler.dart';
+// import 'package:music/supplements/photohero.dart';
+// import 'package:audioplayers/audioplayers.dart';
+// import 'AudioPlayerController.dart';
+import 'package:project_cpr/content/page/AudioPlayer.dart';
+import 'package:project_cpr/content/page/AudioPlayerController.dart';
 import 'package:flutter/widgets.dart';
 
 
 class Homepage extends StatefulWidget {
   Homepage([Key key, this.title,]):
-        super(key: key);
+  super(key: key);
   final String title;
   @override
-  _Homepage createState() => _Homepage();
-
+ _Homepage createState() => _Homepage();
+  
 }
 
 class _Homepage extends State<Homepage> with TickerProviderStateMixin {
   AnimationController animationControllerScreen;
   Animation animationScreen;
-
+  
   @override
   void initSate(){
     super.initState();
 
     animationControllerScreen = AnimationController(duration: Duration(seconds: 2),
-        vsync: this);
+    vsync: this);
     animationScreen = Tween(begin: 1.0,end: 0.0).animate(animationControllerScreen);
   }
 
@@ -48,144 +34,143 @@ class _Homepage extends State<Homepage> with TickerProviderStateMixin {
   double _tela;
 
   Widget build(BuildContext context) {
-    timeDilation = 2.0;
-    _tela = MediaQuery.of(context).size.width;
+      _tela = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(title:
-      Text("Music"),
-
-      ),
-      body:
-      Column(
-        children: <Widget>[
-
-          _player(),
-        ],
-
-
-      ),);
-  }
-  Widget _tap(List<Widget> children){
-    return Container(child: Column(
-      children: children.map((c) => Container(
-        child: c,
-        padding: EdgeInsets.all(6),
-      )).toList(),
-    ),);
-  }
-  Widget _player(){
-    return SingleChildScrollView(
-        child: Column(children: <Widget>[
-          StreamBuilder(
-              stream: audioC.outPlayer,
-              builder: (cxt, AsyncSnapshot<AudioPlayerObj> snapshot){
-                return _tap([
-
-                  Text(snapshot.data.musicaAtual,style: TextStyle(fontSize: _tela * 0.1)),
-
-                  _slider(snapshot.data),
-                  Row(mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      _retornarTempoMusica(snapshot.data.position),
-                      Text(snapshot.data.duration.inMinutes.toString()+ ":" + (snapshot.data.duration.inSeconds - (snapshot.data.duration.inMinutes * 60 )).toString()),
-                    ],
-                  ),Image.asset(""),
-                  _retornarTempoMusica2(snapshot.data.position),
-                  _acoes(snapshot.data),
-
-                ]
-
-                );
-              }
+      backgroundColor: Colors.blueGrey[800],
+      appBar: AppBar(
+            centerTitle: true,
+            title: Text('AudioPlayer'),
           ),
-          Divider(),
-          _listaMusica("จังหวะ.mp3"),
-          _listaMusica("เพลง.mp3"),
-          Divider(),
-        ])
+          body: Column(children: <Widget>[
+            Container(
+
+            ),
+            localAsset()
+          ],)
+          
     );
   }
-  double temp = 0;
 
-  Widget _slider(AudioPlayerObj objto){
-    return Slider(
-      activeColor: Colors.blue,
-      value: objto.position.inSeconds.toDouble() ,
-      max: objto.duration.inSeconds.toDouble(),
-      // min: 0.0,
-      onChanged: (newVal){
-        audioC.tempoMusica(newVal);
-        print(objto.position.inSeconds.toDouble());
-
-
-      },
+  Widget _tab(List<Widget> children) {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: children
+              .map((w) => Container(child: w, padding: EdgeInsets.all(6.0)))
+              .toList(),
+        ),
+      ),
     );
   }
-  Widget _retornarTempoMusica(Duration position){
-    String segundos = (position.inMinutes >= 1
-        ? ((position.inSeconds - position.inMinutes * 60))
-        : position.inSeconds).toString();
 
-    if (position.inSeconds < 10){
-      segundos = "0" + segundos;
-    }
-
-    String tempoMusica = position.inMinutes.toString() + ":" +segundos;
-    return Text(tempoMusica);
-  }
-  Widget _retornarTempoMusica2(Duration position){
-    String segundos = (position.inMinutes >= 1
-        ? ((position.inSeconds - position.inMinutes * 60))
-        : position.inSeconds).toString();
-
-    if (position.inSeconds < 10){
-      segundos = "0" + segundos;
-    }
-
-    String tempoMusica = position.inMinutes.toString() + ":" +segundos;
-    return Text(tempoMusica,style: TextStyle(fontSize: _tela * 0.1),);
-  }
-
-  Widget _acoes(AudioPlayerObj objto){
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+  Widget localAsset() {
+    return Column(
       children: <Widget>[
-        IconButton(iconSize: _tela*.1,
-          icon: Icon(Icons.skip_previous),
-          onPressed: (){
+        StreamBuilder(
+          stream: audioController.outDuration,
+          builder: (context, AsyncSnapshot<AudioPlayerObjeto> snapshot) {
+            if(snapshot.hasData){
+            return SingleChildScrollView(
+              child: _tab([
+                Text(snapshot.data.musicaAtual, style: TextStyle(fontSize: _tela * .05,color: Colors.white),),
+                slider(snapshot.data),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(_retornarTempoMusica(snapshot.data.position,),style: TextStyle(color: Colors.white  ),),
+                    Text(snapshot.data.duration.inMinutes.toString() + ":" + (snapshot.data.duration.inSeconds - (snapshot.data.duration.inMinutes * 60)).toString(),style: TextStyle(color: Colors.white),),              ],
+                ),
+                Text(_retornarTempoMusica(snapshot.data.position), style: TextStyle(fontSize: _tela * 0.05,color: Colors.white),),
+                Divider(),
+                acoes(snapshot.data),
 
 
 
-          },),
-        IconButton(iconSize: _tela*.2,
-          icon: Icon(objto.play == true
-              ? Icons.pause_circle_filled
-              : Icons.play_circle_filled),
-          onPressed: (){
-            audioC.botaoPlayPause();
-
-          },),
-        IconButton(iconSize: _tela*.1,
-          icon: Icon(Icons.skip_next),
-          onPressed: (){
-
-
-
-          },),
-      ],);
+              ]),
+            );
+          }else{
+              return Container();
+            }
+          }
+        ),
+        Divider(),
+        listaMusica("a.mp3"),
+        listaMusica("b.mp3"),
+        
+        Divider(),
+      ],
+    );
   }
 
-  Widget _listaMusica(String musica){
-    print("list Music");
+  Widget listaMusica(String musica){
+
     return ListTile(
-      title: Text(musica),
-      leading: Icon(Icons.music_note),
+      title: Text(musica,style: TextStyle(color: Colors.white,),),
+      leading: Icon(Icons.music_note,color: Colors.white,),
 
       onTap: (){
-        audioC.trocarMusica(musica);
+        audioController.trocarMusica(musica);
+
       },
     );
   }
+
+
+  String _retornarTempoMusica(Duration position) {
+    String segundos = (position.inMinutes >= 1
+            ? ((position.inSeconds - position.inMinutes * 60))
+            : position.inSeconds)
+        .toString();
+
+    if (position.inSeconds < 10) {
+      segundos = "0" + segundos;
+    }
+    return position.inMinutes.toString() + ":" + segundos;
+  }
+
+  Widget acoes(AudioPlayerObjeto objeto) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        IconButton(
+            iconSize: _tela * .1,color: Colors.white,
+            icon: Icon(Icons.skip_previous),
+            onPressed: () {
+            }),
+
+        IconButton(
+            iconSize: _tela * .2,color: Colors.white,
+            icon: Icon(objeto.play == true
+                ? Icons.pause_circle_filled
+                : Icons.play_circle_filled),
+            onPressed: () {
+              audioController.botaoPlayPause();
+
+            }),
+        IconButton(
+            iconSize: _tela * .1,color: Colors.white,
+            icon: Icon(Icons.skip_next),
+            onPressed: () {
+             
+            }),
+      ],
+    );
+  }
+
+  Widget slider(AudioPlayerObjeto objeto) {
+    return Slider(
+        activeColor: Colors.amber,
+        onChanged: (newValue) {
+            print(newValue);
+           audioController.tempoMusica(newValue);
+            print(objeto.position.inSeconds.toDouble());
+        },
+        value: objeto.position.inSeconds.toDouble(),
+        min: 0.0,
+        max: objeto.duration.inSeconds.toDouble());
+  }
+
 }
 
 
